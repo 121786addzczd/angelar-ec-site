@@ -11,6 +11,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+
   public categoryList: string[] = ['Fridge', 'Washer', 'Kitchen', 'Vacuum', 'Climate', 'TV', 'Other'];
   public productList: Product[] = [
     { productId: 1, rating: 4, productName: 'French Door Fridge', category: 'Fridge', price: 2200, isSale: false, releaseDate: '2024-02-01', availableQty: 3, imageUrl: 'images/1.jpg' },
@@ -30,8 +31,24 @@ export class HomeComponent {
     { productId: 15, rating: 5, productName: 'Compact TV', category: 'TV', price: 300, isSale: true, releaseDate: '2023-01-10', availableQty: 5, imageUrl: 'images/15.jpg' }
   ];
 
+  constructor() {
+    this.productList = this.markNewProducts(this.productList)
+  }
+
   public trackByIndex(index: number, item: any): number {
     return index;
+  }
+
+  private markNewProducts(productList: Product[]): Product[] {
+    const referenceDate = new Date('2024-04-01');
+    const threeMonthAgo = new Date(referenceDate);
+    threeMonthAgo.setMonth(threeMonthAgo.getMonth() -3);
+
+    return productList.map(product => {
+      const releaseDate = new Date(product.releaseDate);
+      product.isNew = releaseDate > threeMonthAgo;
+      return product;
+    });
   }
 
 }
